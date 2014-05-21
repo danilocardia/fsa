@@ -45,7 +45,9 @@
     <Compile Include="Rua.cs" />
     <Compile Include="Semaforo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sensor.cs" />
+    <Compile Include="Sensor\Exceptions\SensorException.cs" />
+    <Compile Include="Sensor\ISensor.cs" />
+    <Compile Include="Sensor\VelocidadeMediaSensor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

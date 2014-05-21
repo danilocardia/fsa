@@ -11,6 +11,7 @@ namespace FSA.TCC.Elementos
         public float Tamanho { get; set; }
         public Semaforo Semaforo { get; set; }
         public List<Carro> CarrosNaRua { get; set; }
+        public List<ISensor> Sensores { get; set; }
 
         public Rua(string id, int tamanho)
         {
