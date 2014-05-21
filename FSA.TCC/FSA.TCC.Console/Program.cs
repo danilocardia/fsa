@@ -75,6 +75,8 @@ namespace FSA.TCC
         static void c1_ImpedimentoDeProgresso(Carro impedido, Carro impedidor)
         {
             Console.WriteLine("{0} - O carro {1} está impedindo o carro {2} de progredir", tempo.ToString().PadLeft(4, '0'), impedidor.Id, impedido.Id);
+
+// joao
         }
 
         static void c1_AguardandoSemaforo(Carro c)
