@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace FSA.TCC.Elementos
+namespace FSA.TCC.Simulador
 {
     public class Carro
     {

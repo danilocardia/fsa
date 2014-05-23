@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FSA.TCC.Simulador.Sensor;
 
-namespace FSA.TCC.Elementos
+namespace FSA.TCC.Simulador
 {
     public class Rua
     {
@@ -20,6 +21,9 @@ namespace FSA.TCC.Elementos
 
             Semaforo = new Semaforo();
             CarrosNaRua = new List<Carro>();
+            Sensores = new List<ISensor>();
+
+            Sensores.Add(new VelocidadeMediaNoCaminhoSensor(this));
         }
     }
 }

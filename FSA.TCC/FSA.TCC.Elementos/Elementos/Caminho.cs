@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FSA.TCC.Elementos
+namespace FSA.TCC.Simulador
 {
     public class Caminho : List<Rua>
     {

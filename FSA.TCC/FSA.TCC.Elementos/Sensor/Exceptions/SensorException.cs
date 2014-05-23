@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FSA.TCC.Elementos.Sensor.Exceptions
+namespace FSA.TCC.Simulador.Sensor.Exceptions
 {
-    public class SensorException : Exception
+    public class SensorSemRuaException : Exception
     {
-        public SensorException(string msg)
-            : base(msg)
+        public SensorSemRuaException()
+            : base("O sensor não possui rua para calcular")
+        {
+
+        }
+    }
+    public class RuaSemCarrosException : Exception
+    {
+        public RuaSemCarrosException()
+            : base("A rua não possui carros para calcular")
         {
 
         }

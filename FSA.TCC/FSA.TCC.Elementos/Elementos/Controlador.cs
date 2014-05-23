@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FSA.TCC.Elementos
+namespace FSA.TCC.Simulador
 {
     public class Controlador
     {
@@ -18,6 +18,11 @@ namespace FSA.TCC.Elementos
             foreach (Rua rua in Cruzamento.Ruas)
             {
                 rua.Semaforo.Avancar();
+
+                foreach (ISensor sensor in rua.Sensores)
+                {
+                    sensor.Calcular();
+                }
             }
         }
     }

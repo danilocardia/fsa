@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FSA.TCC.Elementos;
+using FSA.TCC.Simulador;
 
 namespace FSA.TCC
 {
@@ -52,7 +52,7 @@ namespace FSA.TCC
             {
                 ct1.Avancar();
 
-                if (tempo == 26)
+                if (TempoDoSistema.Valor == 26)
                 {
                     c2.Iniciar();
                 }
@@ -60,7 +60,7 @@ namespace FSA.TCC
                 c1.Mover();
                 c2.Mover();
 
-                tempo++;
+                TempoDoSistema.Incrementar();
             }
 
             Console.ReadLine();
@@ -68,31 +68,29 @@ namespace FSA.TCC
 
         static void c1_InicioCaminho(Carro c)
         {
-            Console.WriteLine("{1} - O carro {0} iniciou seu caminho", c.Id, tempo.ToString().PadLeft(4, '0'));
+            Console.WriteLine("{1} - O carro {0} iniciou seu caminho", c.Id, TempoDoSistema.Valor.ToString().PadLeft(4, '0'));
             carros++;
         }
 
         static void c1_ImpedimentoDeProgresso(Carro impedido, Carro impedidor)
         {
-            Console.WriteLine("{0} - O carro {1} está impedindo o carro {2} de progredir", tempo.ToString().PadLeft(4, '0'), impedidor.Id, impedido.Id);
-
-// joao
+            Console.WriteLine("{0} - O carro {1} está impedindo o carro {2} de progredir", TempoDoSistema.Valor.ToString().PadLeft(4, '0'), impedidor.Id, impedido.Id);
         }
 
         static void c1_AguardandoSemaforo(Carro c)
         {
-            Console.WriteLine("{1} - O carro {0} está aguardando no semáforo", c.Id, tempo.ToString().PadLeft(4, '0'));
+            Console.WriteLine("{1} - O carro {0} está aguardando no semáforo", c.Id, TempoDoSistema.Valor.ToString().PadLeft(4, '0'));
         }
 
         static void c1_TerminoCaminho(Carro c)
         {
-            Console.WriteLine("{1} - O carro {0} terminou seu caminho", c.Id, tempo.ToString().PadLeft(4, '0'));
+            Console.WriteLine("{1} - O carro {0} terminou seu caminho", c.Id, TempoDoSistema.Valor.ToString().PadLeft(4, '0'));
             carros--;
         }
 
         static void c1_TrocaDeRua(Carro c, Rua origem, Rua destino)
         {
-            Console.WriteLine("{3} - O carro {0} saiu da rua {1} e entrou na rua {2}", c.Id, origem.Id, destino.Id, tempo.ToString().PadLeft(4, '0'));
+            Console.WriteLine("{3} - O carro {0} saiu da rua {1} e entrou na rua {2}", c.Id, origem.Id, destino.Id, TempoDoSistema.Valor.ToString().PadLeft(4, '0'));
         }
     }
 }

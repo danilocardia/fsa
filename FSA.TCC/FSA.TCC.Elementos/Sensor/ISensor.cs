@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FSA.TCC.Elementos
+namespace FSA.TCC.Simulador
 {
     public interface ISensor
     {
         Rua Rua { get; set; }
-        float Calcular();
+        float Resultado { get; set; }
+        void Calcular();
     }
 }

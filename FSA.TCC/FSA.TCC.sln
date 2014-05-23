@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSA.TCC.Console", "FSA.TCC.Console\FSA.TCC.Console.csproj", "{D3D9D7C0-2B26-4E57-8392-72127F6687D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSA.TCC.Elementos", "FSA.TCC.Elementos\FSA.TCC.Elementos.csproj", "{74B3F664-A6E9-46E1-8247-24F4FB18D1F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSA.TCC.Simulador", "FSA.TCC.Elementos\FSA.TCC.Simulador.csproj", "{74B3F664-A6E9-46E1-8247-24F4FB18D1F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

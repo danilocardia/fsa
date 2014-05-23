@@ -43,9 +43,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FSA.TCC.Elementos\FSA.TCC.Elementos.csproj">
+    <ProjectReference Include="..\FSA.TCC.Elementos\FSA.TCC.Simulador.csproj">
       <Project>{74B3F664-A6E9-46E1-8247-24F4FB18D1F1}</Project>
-      <Name>FSA.TCC.Elementos</Name>
+      <Name>FSA.TCC.Simulador</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
