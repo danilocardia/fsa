@@ -6,16 +6,23 @@ namespace FSA.TCC.Simulador
 {
     public class Semaforo
     {
-        public EstadoSemaforo Estado { get; set; }
-
         private int contador;
         private Dictionary<EstadoSemaforo, int> configuracao;
+
+        public EstadoSemaforo Estado { get; set; }
+        public int TempoRestante
+        {
+            get
+            {
+                return configuracao[Estado] - contador;
+            }
+        }
 
         public Semaforo()
         {
             configuracao = new Dictionary<EstadoSemaforo, int>();
-            configuracao[EstadoSemaforo.Aberto] = 30;
-            configuracao[EstadoSemaforo.Fechado] = 30;
+            configuracao[EstadoSemaforo.Aberto] = 5;
+            configuracao[EstadoSemaforo.Fechado] = 40;
 
             Estado = EstadoSemaforo.Fechado;
         }

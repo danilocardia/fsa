@@ -10,6 +10,7 @@ namespace FSA.TCC.Simulador.Sensor
     {
         private class ValorCarro
         {
+
             public Carro Carro { get; set; }
             public List<Amostra> Amostras { get; set; }
             public float Resultado { get; set; }
@@ -25,6 +26,11 @@ namespace FSA.TCC.Simulador.Sensor
 
         public Rua Rua { get; set; }
         public float Resultado { get; set; }
+
+        public string Nome
+        {
+            get { return "Vel. Méd. Na Rua"; }
+        }
 
         public VelocidadeMediaNoCaminhoSensor()
         {
@@ -48,8 +54,10 @@ namespace FSA.TCC.Simulador.Sensor
             }
 
             // colhe dados dos carros que já estão sendo analisados
-            foreach (ValorCarro vc in ValoresCarro)
+            for (int i = ValoresCarro.Count - 1; i > 0; i--)
             {
+                ValorCarro vc = ValoresCarro[i];
+
                 // se o carro a ser analisado está na rua
                 if (Rua.CarrosNaRua.Contains(vc.Carro))
                 {
@@ -62,7 +70,7 @@ namespace FSA.TCC.Simulador.Sensor
                     ValoresCarro.Remove(vc);
                 }
             }
-            
+
             // colhe dados dos carros que não estão sendo analisados ainda
             foreach (Carro c in Rua.CarrosNaRua.Where(cc => !ValoresCarro.Select(vc => vc.Carro).Contains(cc)))
             {
@@ -75,7 +83,7 @@ namespace FSA.TCC.Simulador.Sensor
             // calula a velocidade média a partir das posições e preenche a propriedade Resultado
             foreach (ValorCarro vc in ValoresCarro)
             {
-                if (vc.Amostras.Count > 2)
+                if (vc.Amostras.Count > 1)
                 {
                     // Vm = (Xf - Xi) / (tf - ti)
                     vc.Resultado = (vc.Amostras.Max(a => a.Valor) - vc.Amostras.Min(a => a.Valor)) / (vc.Amostras.Max(a => a.Tempo) - vc.Amostras.Min(a => a.Tempo));

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using FSA.TCC.Simulador;
+using System.Threading;
+using System.Linq;
 
 namespace FSA.TCC
 {
@@ -28,31 +30,30 @@ namespace FSA.TCC
             Cruzamento cz1 = new Cruzamento(r1, r2, r3, r4);
             Controlador ct1 = new Controlador(cz1);
 
-            Carro c1 = new Carro("Carro 1", caminho1);
-            c1.Velocidade = 180;
-            
-            c1.TrocaDeRua += new Carro.CarroTrocaHandler(c1_TrocaDeRua);
-            c1.TerminoCaminho += new Carro.CarroTerminoHandler(c1_TerminoCaminho);
+            Carro c1 = new Carro("Carro 1", caminho1, 0.05f, 90);
+
+            /*c1.TrocaDeRua += new Carro.CarroTrocaHandler(c1_TrocaDeRua);
             c1.AguardandoSemaforo += new Carro.CarroAguardandoHandler(c1_AguardandoSemaforo);
-            c1.ImpedimentoDeProgresso += new Carro.CarroImpedidoHandler(c1_ImpedimentoDeProgresso);
+            c1.ImpedimentoDeProgresso += new Carro.CarroImpedidoHandler(c1_ImpedimentoDeProgresso);*/
+            c1.TerminoCaminho += new Carro.CarroTerminoHandler(c1_TerminoCaminho);
             c1.InicioCaminho += new Carro.CarroInicioHandler(c1_InicioCaminho);
 
-            Carro c2 = new Carro("Carro 2", caminho2);
-            c2.Velocidade = 360;
+            Carro c2 = new Carro("Carro 2", caminho2, 0.055f, 120);
 
-            c2.TrocaDeRua += new Carro.CarroTrocaHandler(c1_TrocaDeRua);
-            c2.TerminoCaminho += new Carro.CarroTerminoHandler(c1_TerminoCaminho);
+            /*c2.TrocaDeRua += new Carro.CarroTrocaHandler(c1_TrocaDeRua);
             c2.AguardandoSemaforo += new Carro.CarroAguardandoHandler(c1_AguardandoSemaforo);
-            c2.ImpedimentoDeProgresso += new Carro.CarroImpedidoHandler(c1_ImpedimentoDeProgresso);
+            c2.ImpedimentoDeProgresso += new Carro.CarroImpedidoHandler(c1_ImpedimentoDeProgresso);*/
+            c2.TerminoCaminho += new Carro.CarroTerminoHandler(c1_TerminoCaminho);
             c2.InicioCaminho += new Carro.CarroInicioHandler(c1_InicioCaminho);
 
             c1.Iniciar();
+            carros = 1;
 
             while (carros > 0)
             {
                 ct1.Avancar();
 
-                if (TempoDoSistema.Valor == 26)
+                if (TempoDoSistema.Valor == 20)
                 {
                     c2.Iniciar();
                 }
@@ -60,15 +61,82 @@ namespace FSA.TCC
                 c1.Mover();
                 c2.Mover();
 
+                Console.Clear();
+                ExibeCarros(c1, c2);
+                ExibeSemaforos(cz1);
+                //ExibeSensores(cz1);
+
                 TempoDoSistema.Incrementar();
+                Thread.Sleep(100);
             }
 
             Console.ReadLine();
         }
 
+        static void ExibeCarros(params Carro[] lista_carros)
+        {
+            Console.WriteLine("Tempo: {0}\n", TempoDoSistema.Valor.ToString().PadLeft(4, '0'));
+
+            Console.WriteLine("TABELA DE PROGRESSO");
+            Console.WriteLine("Carro\tRua\tProgresso\t\t\t\tVelocidade");
+            foreach (Carro c in lista_carros)
+            {
+                string carro, rua = "", progresso = "", velocidade = "";
+
+                carro = c.Id;
+                if (c.Caminho.RuaAtual != null)
+                {
+                    rua = c.Caminho.RuaAtual.Id;
+
+                    int pg = Convert.ToInt32((c.Posicao / c.Caminho.RuaAtual.Tamanho) * 30);
+
+                    for(int i = 0; i < pg; i++)
+                        progresso += "=" ;
+
+                    for (int i = 0; i < 30 - pg; i++)
+                        progresso += "_";
+
+                    velocidade = c.Velocidade.ToString() + "m/s";
+                }
+
+                Console.WriteLine("{0}\t{1}\t[{2}]\t{3}", carro, rua, progresso, velocidade);
+            }
+
+            Console.WriteLine("\n");
+        }
+
+        static void ExibeSemaforos(Cruzamento cz)
+        {
+            Console.WriteLine("ESTADO DOS SEMAFOROS");
+            Console.WriteLine("Rua\t\tEstado\t\tCountdown");
+
+            foreach (Rua r in cz.Ruas)
+            {
+                string carros = "";
+
+                foreach(Carro c in r.CarrosNaRua)
+                    carros += c.Id + " ";
+
+                Console.WriteLine("{0}\t\t{1}\t\t{2}\t\t{3}", r.Id, r.Semaforo.Estado.ToString(),r.Semaforo.TempoRestante.ToString().PadLeft(2, '0'), "(" + carros + ")");
+            }
+
+            Console.WriteLine("\n");
+        }
+
+        static void ExibeSensores(Cruzamento cz)
+        {
+            Console.WriteLine("ESTADO DOS SENSORES");
+            Console.WriteLine("Rua\t\tSensor\t\t\tValor");
+
+            foreach (Rua r in cz.Ruas)
+            {
+                Console.WriteLine("{0}\t\t{1}\t\t{2}", r.Id, r.Sensores[0].Nome, r.Sensores[0].Resultado.ToString() + "m/s");
+            }
+        }
+
         static void c1_InicioCaminho(Carro c)
         {
-            Console.WriteLine("{1} - O carro {0} iniciou seu caminho", c.Id, TempoDoSistema.Valor.ToString().PadLeft(4, '0'));
+            //Console.WriteLine("{1} - O carro {0} iniciou seu caminho", c.Id, TempoDoSistema.Valor.ToString().PadLeft(4, '0'));
             carros++;
         }
 
@@ -84,7 +152,7 @@ namespace FSA.TCC
 
         static void c1_TerminoCaminho(Carro c)
         {
-            Console.WriteLine("{1} - O carro {0} terminou seu caminho", c.Id, TempoDoSistema.Valor.ToString().PadLeft(4, '0'));
+            //Console.WriteLine("{1} - O carro {0} terminou seu caminho", c.Id, TempoDoSistema.Valor.ToString().PadLeft(4, '0'));
             carros--;
         }
 

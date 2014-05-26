@@ -21,19 +21,31 @@ namespace FSA.TCC.Simulador
         public string Id { get; set; }
         public Caminho Caminho { get; set; }
         public float Posicao { get; set; }
-        public float Velocidade { get; set; } // m/s
+        private float _velocidade = 0;
+        public float Velocidade
+        {
+            get
+            {
+                return _velocidade;
+            }
+        } // m/s
+        public float VelocidadeLimite { get; set; } // m/s
+        public float Aceleracao { get; set; }
         public float Tamanho
         {
             get { return 2; }
         }
 
+        private int tempoInicio = -1;
         private bool isIniciado = false;
 
-        public Carro(string id, Caminho c)
+        public Carro(string id, Caminho c, float aceleracao, float velocidadeLimite)
         {
             Id = id;
             Caminho = c;
             Posicao = 0;
+            Aceleracao = aceleracao;
+            VelocidadeLimite = velocidadeLimite;
         }
 
         public void Iniciar()
@@ -42,17 +54,23 @@ namespace FSA.TCC.Simulador
             isIniciado = true;
 
             // Notifica o inicio do caminho
-            InicioCaminho(this);
+            if (InicioCaminho != null)
+            {
+                InicioCaminho(this);
+            }
         }
 
         public void Mover()
         {
             if (Caminho.RuaAtual == null || isIniciado == false)
                 return;
-                        
-            AtualizarPosicao();
 
-            if (Posicao >= Caminho.RuaAtual.Tamanho)
+
+            if (Posicao <= Caminho.RuaAtual.Tamanho)
+            {
+                AtualizarPosicao();
+            }
+            else
             {
                 if (Caminho.RuaAtual.Semaforo.Estado == EstadoSemaforo.Aberto)
                 {
@@ -63,41 +81,75 @@ namespace FSA.TCC.Simulador
                         anterior.CarrosNaRua.Remove(this); // tira o carro da rua anterior
                         Caminho.RuaAtual.CarrosNaRua.Add(this); // coloca o carro na rua atual
 
-                        TrocaDeRua(this, anterior, Caminho.RuaAtual);
+                        if (TrocaDeRua != null)
+                        {
+                            TrocaDeRua(this, anterior, Caminho.RuaAtual);
+                        }
                         Posicao = 0;
                     }
                     else
                     {
-                        TerminoCaminho(this);
+                        if (TerminoCaminho != null)
+                        {
+                            TerminoCaminho(this);
+                        }
                     }
                 }
                 else
                 {
-                    AguardandoSemaforo(this);
+                    // O carro está parado
+                    tempoInicio = -1;
+
+                    if (AguardandoSemaforo != null)
+                    {
+                        AguardandoSemaforo(this);
+                    }
                 }
             }
         }
 
         public void AtualizarPosicao()
         {
-            float avanco = this.Velocidade;
-            var carroEmFrente = Caminho.RuaAtual.CarrosNaRua.Where(cr => cr.Posicao >= this.Posicao && cr != this).OrderBy(cr => cr.Posicao).FirstOrDefault();
+            AtualizarVelocidade();
+
+            // seleciona os carros que estao na frente
+            var carroEmFrente = Caminho.RuaAtual.CarrosNaRua.Where(cr => cr.Posicao >= Posicao && cr != this).OrderBy(cr => cr.Posicao).FirstOrDefault();
 
             // se não tem carro em frente ou o avanco é menor que a distancia entre os dois carros
-            if (carroEmFrente == null || (avanco < (carroEmFrente.Posicao - carroEmFrente.Tamanho - this.Posicao)))
+            if (carroEmFrente == null || (Velocidade < (carroEmFrente.Posicao - carroEmFrente.Tamanho - Posicao)))
             {
                 // avança a posição do carro
-                this.Posicao += avanco;
+                Posicao += Velocidade;
             }
             // senão, o avanco é maior que a distancia entre o carro e o carro em frente
             else
             {
                 // o carro fica meio metro atrás do carro da frente
-                this.Posicao = carroEmFrente.Posicao - carroEmFrente.Tamanho - 0.5f;
+                float novaPosicao = carroEmFrente.Posicao - carroEmFrente.Tamanho - 0.5f;
+
+                // atualiza a velocidade para a realmente utilizada
+                _velocidade = novaPosicao - Posicao;
+
+                // atualiza a posicao
+                Posicao = novaPosicao;
 
                 // notifica o impedimento de progresso
-                ImpedimentoDeProgresso(this, carroEmFrente);
+                if (ImpedimentoDeProgresso != null)
+                {
+                    ImpedimentoDeProgresso(this, carroEmFrente);
+                }
             }
+        }
+
+        public void AtualizarVelocidade()
+        {
+            if (tempoInicio == -1)
+                tempoInicio = TempoDoSistema.Valor;
+
+            float novaVelocidade = Aceleracao * (float)Math.Pow((TempoDoSistema.Valor - tempoInicio), 2);
+
+            // se a velocidade calculada for maior que a velocidade limite, retorna a velocidade limite, caso contrário retorna a velocidade calculada
+            _velocidade = VelocidadeLimite > novaVelocidade ? novaVelocidade : VelocidadeLimite;
         }
     }
 }
