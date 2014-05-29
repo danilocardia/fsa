@@ -30,7 +30,7 @@ namespace FSA.TCC
             Cruzamento cz1 = new Cruzamento(r1, r2, r3, r4);
             Controlador ct1 = new Controlador(cz1);
 
-            Carro c1 = new Carro("Carro 1", caminho1, 0.05f, 90);
+            Carro c1 = new Carro("Carro 1", caminho1, 0.05f, 80);
 
             /*c1.TrocaDeRua += new Carro.CarroTrocaHandler(c1_TrocaDeRua);
             c1.AguardandoSemaforo += new Carro.CarroAguardandoHandler(c1_AguardandoSemaforo);
@@ -67,7 +67,7 @@ namespace FSA.TCC
                 //ExibeSensores(cz1);
 
                 TempoDoSistema.Incrementar();
-                Thread.Sleep(100);
+                Thread.Sleep(150);
             }
 
             Console.ReadLine();
