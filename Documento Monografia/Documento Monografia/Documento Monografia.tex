@@ -75,7 +75,6 @@
 	\fi}%
 % ---
 
-
 % ---
 % Informações de dados para CAPA e FOLHA DE ROSTO
 % ---
@@ -84,7 +83,7 @@
 \local{Brasil}
 \data{2014, v-1.0}
 \orientador{Jacinto Cansado}
-\coorientador{Paulo Francis}
+\coorientador{}
 \instituicao{%
   Centro Universitário Fundação Santo André - FSA
   \par
@@ -116,10 +115,10 @@
 	    pdfcreator={LaTeX with abnTeX2},
 		pdfkeywords={abnt}{latex}{abntex}{abntex2}{trabalho acadêmico}, 
 		colorlinks=true,       		% false: boxed links; true: colored links
-    	linkcolor=blue,          	% color of internal links
-    	citecolor=blue,        		% color of links to bibliography
-    	filecolor=magenta,      		% color of file links
-		urlcolor=blue,
+    	linkcolor=black,          	% color of internal links
+    	citecolor=black,        		% color of links to bibliography
+    	filecolor=black,      		% color of file links
+		urlcolor=black,
 		bookmarksdepth=4
 }
 \makeatother
@@ -279,8 +278,42 @@ Fazer os agradecimentos e créditos.
 \cleardoublepage
 % ---
 
-\include{Introducao}
+\textual
 
+\chapter{Introdução}
+
+\section{Motivação}
+
+Os problemas de transporte afetam diretamente a qualidade de vida dos habitantes da cidade de São Paulo, e também, de outras grandes cidades metropolitanas de países em desenvolvimento.
+Em horários de pico, a quantidade de veículos nas principais vias da cidade é tão grande que grande parte dos motoristas já se acostumaram a dirigir em engarrafamentos quilométricos, acostumaram-se também, a gastar horas para fazer um trajeto que, em via livre, gastaria-se poucas dezenas de minutos.
+
+Ainda que o tráfego urbano seja o resultado de um complexo conjunto de fatores e que a frota de veículos particulares na cidade de São Paulo tenha aumentado cerca de 1080\% (GEIPOT) nos últimos 30 anos \cite{serra2004aplicaccoes}, não houve uma evolução perceptível no controle de trânsito ou no uso de novas tecnologias pelas entidades de engenharia de tráfego, sendo que, é impressindível o conhecimento sistêmico do comportamento dos veículos em seus deslocamentos sobre a malha viária para se fazer um controle efetivo que garanta melhorias como redução no número de acidentes de trânsito, redução no tempo de viagem dos motoristas e redução da emissão de poluentes devido à redução de consumo de combustível.
+
+O avanço da tecnologia proporciona a possibilidade de implantação de métodos de controle nas vias, aumentando a capacidade das vias. Estudos atuais de automação veícular abordam ideias como veículos dirigitos automaticamente onde, por aquisição de dados por sensores e por comunicação com outros veículos e agentes no transito como semáforos, permitem que o veículo faça seu trajeto de forma mais segura, rápida e eficiênte. Existem algumas frentes com essa abordagem como controlador veicular centralizado (CVC) e rede veícular auto-roteada (VANET).
+
+Situações incômodas no sistema de tráfego atual como a exposição ao perigo que os motoristas são obrigados a se submeter devido à violência noturna nas principais vias das cidades e vias congestionadas devido ao semáforo estar fechado sendo que a via transversal não possui veículos. Durante a noite, vias transversais vazias são motivações comuns para que motoristas cruzem o semáforo vermelho receosos devido ao perigo de esperar o semáforo abrir. Os semáforos em São Paulo não tem lógicas embarcadas para evitar esse tipo de situação. A tecnologia que soluciona essas situações já existe e foi implantada na cidade de Londres, Reino Unido, onde os semáforos se comunicam utilizando protocolo aberto, que possibilida a fabricação de semáforos com essa tecnologia por diversas empresas.
+
+Diversos problemas reais tem soluções aplicadas a partir de um modelo \nocite{silveira2012universidade}  construido computacionalmente. Existem métodos para a modelagem de um problema por meio de tecnologias atuais, sendo possível simular a situação modelada e permitir o acompanhamento individual dos eventos discretizados no modelo, percebendo os pontos afetados pelo acontecimento do evento. Essa modelagem tem sido aplicada também no problema da degradação do tráfego urbano em grandes cidades metropolitanas, apresentando simuladores altamente parametrizáveis porém não tão visuais e intuitivos para utilização de usuários não especializados. 
+
+\section{Objetivo}
+
+O principal objetivo do trabalho é produzir um algoritmo para o funcionamento dos controladores de semáforos no tráfego urbano, onde esses controladores recuperam dados do sensoriamento colocado nas vias e trocam dados com os controladores mais próximos, e com base nos dados dos sensores e da comunicação, alteram a temporização de seus semáforos.
+
+Para demonstrar o funcionamento desse algoritmo, será criada uma ferramenta visual de simulação de tráfego urbano, onde usuários com conhecimentos básicos de tráfego urbano podem criar mapas e parametrizações, e podem assistir em tempo real à simulação baseada nos dados fornecidos. Dois tipos de simulação poderão ser executados: Usando o algoritmo de otimização ou usando temporização fixa nos semáforos.
+
+Serão geradas informações sobre a simulação para que o usuário perceba claramente a diferença entre os resultados dos dois tipos de simulação. Para melhor compreensão, serão exibidos gráficos comparando os principais indicadores dos trajetos, como tempo em movimento e tempo de espera.
+
+\chapter{Teste qualquer}
+
+Teste 1234Teste  1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234 \nocite{schmidt2011arduino}
+
+Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234.
+
+Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234
+
+Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234Teste 1234
+
+\bibliography{bibliografia}
 
 
 \end{document}

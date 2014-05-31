@@ -1,11 +1,12 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: Documento Monografia.aux
 A level-1 auxiliary file: Resumo.aux
 The style file: abntex2-alf.bst
-I found no \bibdata command---while reading file Documento Monografia.aux
-Warning--I didn't find a database entry for "abnt-url-package=url"
+Database file #1: abntex2-options.bib
+Database file #2: bibliografia.bib
+Warning--I didn't find a database entry for "schmidt2011arduino"
 +---------------------------------------------------------+
 | Estilo bibliográfico abntex2-alf.bst versão v-1.9.2           |
 | Em caso de dúvidas ou problemas com este estilo procure |
 | http://abntex2.googlecode.com                           |
 +---------------------------------------------------------+
-(There was 1 error message)
+(There was 1 warning)
