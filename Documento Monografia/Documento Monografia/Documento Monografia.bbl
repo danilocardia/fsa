@@ -5,4 +5,16 @@
 \providecommand{\abntbstabout}[1]{}
 \abntbstabout{v-1.9.2 }
 
+\bibitem[Serra et al. 2004]{serra2004aplicaccoes}
+\abntrefinfo{Serra et al.}{SERRA et al.}{2004}
+{SERRA, M. R.~G. et al. Aplica{\c{c}}{\~o}es de aprendizagem por refor{\c{c}}o
+  em controle de tr{\'a}fego veicular urbano.
+Florian{\'o}polis, SC, 2004.}
+
+\bibitem[SILVEIRA et al. 2012]{silveira2012universidade}
+\abntrefinfo{SILVEIRA et al.}{SILVEIRA et al.}{2012}
+{SILVEIRA, F.~K. et al. Universidade do estado de santa catarina bacharelado em
+  ci{\^e}ncia da computa{\c{c}}{\~a}o.
+2012.}
+
 \end{thebibliography}
