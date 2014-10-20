@@ -11,6 +11,19 @@ namespace FSA.TCC.Simulador
         public Controlador(Cruzamento cruzamento)
         {
             Cruzamento = cruzamento;
+
+            foreach (Rua rua in cruzamento.Ruas)
+            {
+                if (rua.Semaforo != null)
+                {
+                    rua.Semaforo.TrocaDeEstado += Semaforo_TrocaDeEstado;
+                }
+            }
+        }
+
+        void Semaforo_TrocaDeEstado()
+        {
+            
         }
 
         public void Avancar()

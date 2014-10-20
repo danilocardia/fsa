@@ -8,7 +8,7 @@ namespace FSA.TCC.Simulador
     {
         public List<Rua> Ruas { get; set; }
 
-        public Cruzamento(Rua r1, Rua r2, Rua r3 = null, Rua r4 = null)
+        public Cruzamento(Rua r1, Rua r2, Rua r3 = null, Rua r4 = null, bool possuiSemaforo = true)
         {
             Ruas = new List<Rua>();
 
@@ -23,6 +23,14 @@ namespace FSA.TCC.Simulador
             if (r4 != null)
             {
                 Ruas.Add(r4);
+            }
+
+            if (!possuiSemaforo)
+            {
+                foreach (Rua r in Ruas)
+                {
+                    r.Semaforo = null; // Remove o semáforo da rua
+                }
             }
         }
     }

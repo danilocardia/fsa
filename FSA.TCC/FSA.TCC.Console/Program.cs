@@ -67,10 +67,31 @@ namespace FSA.TCC
                 //ExibeSensores(cz1);
 
                 TempoDoSistema.Incrementar();
-                Thread.Sleep(150);
+                Thread.Sleep(175);
             }
 
+            //DesenhaMapa();
+
             Console.ReadLine();
+        }
+
+        static void DesenhaMapa()
+        {
+            List<Rua> ruas = new List<Rua>();
+
+            for (int i = 0; i < 12; i++)
+            {
+                ruas.Add(new Rua("Rua " + i, 5));
+            }
+
+            List<Cruzamento> cruzamentos = new List<Cruzamento>();
+
+            for (int i = 0; i < 4; i++)
+            {
+                cruzamentos.Add(new Cruzamento(ruas[i], ruas[i + 3], ruas[i + 5], ruas[i + 2]));
+            }
+
+            Mapa m = new Mapa(cruzamentos.ToArray());
         }
 
         static void ExibeCarros(params Carro[] lista_carros)

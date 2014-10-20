@@ -11,14 +11,14 @@ MaxPos.x=-1
 MaxPos.y=-1
 NormalPos.left=4
 NormalPos.top=26
-NormalPos.right=1016
-NormalPos.bottom=582
+NormalPos.right=1008
+NormalPos.bottom=376
 Class=LaTeXView
 Document=Documento Monografia.tex
 
 [Frame0_View0,0]
-TopLine=278
-Cursor=8625
+TopLine=308
+Cursor=10409
 
 [Frame1]
 Flags=0
@@ -29,14 +29,14 @@ MaxPos.x=-1
 MaxPos.y=-1
 NormalPos.left=4
 NormalPos.top=26
-NormalPos.right=1016
-NormalPos.bottom=582
+NormalPos.right=1008
+NormalPos.bottom=376
 Class=LaTeXView
 Document=Resumo.tex
 
 [Frame1_View0,0]
-TopLine=0
-Cursor=854
+TopLine=6
+Cursor=502
 
 [SessionInfo]
 FrameCount=2

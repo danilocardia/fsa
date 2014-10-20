@@ -24,6 +24,7 @@ namespace FSA.TCC.Simulador
             Sensores = new List<ISensor>();
 
             Sensores.Add(new VelocidadeMediaNoCaminhoSensor(this));
+            Sensores.Add(new QuantidadeCarrosSensor(this));
         }
     }
 }

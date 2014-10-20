@@ -44,10 +44,12 @@
     <Compile Include="Elementos\Cruzamento.cs" />
     <Compile Include="Elementos\Rua.cs" />
     <Compile Include="Elementos\Semaforo.cs" />
+    <Compile Include="Mapa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sensor\Amostra.cs" />
     <Compile Include="Sensor\Exceptions\SensorException.cs" />
     <Compile Include="Sensor\ISensor.cs" />
+    <Compile Include="Sensor\QuantidadeCarrosSensor.cs" />
     <Compile Include="Sensor\VelocidadeMediaNoCaminhoSensor.cs" />
     <Compile Include="Simulador.cs" />
     <Compile Include="TempoDoSistema.cs" />

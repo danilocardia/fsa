@@ -72,7 +72,9 @@ namespace FSA.TCC.Simulador
             }
             else
             {
-                if (Caminho.RuaAtual.Semaforo.Estado == EstadoSemaforo.Aberto)
+                _velocidade = 0;
+
+                if (Caminho.RuaAtual.Semaforo == null || Caminho.RuaAtual.Semaforo.Estado == EstadoSemaforo.Aberto)
                 {
                     Rua anterior = Caminho.RuaAtual;
 
@@ -89,6 +91,7 @@ namespace FSA.TCC.Simulador
                     }
                     else
                     {
+                        anterior.CarrosNaRua.Remove(this); // tira o carro da rua anterior                        
                         if (TerminoCaminho != null)
                         {
                             TerminoCaminho(this);
@@ -110,10 +113,10 @@ namespace FSA.TCC.Simulador
 
         public void AtualizarPosicao()
         {
-            AtualizarVelocidade();
-
             // seleciona os carros que estao na frente
             var carroEmFrente = Caminho.RuaAtual.CarrosNaRua.Where(cr => cr.Posicao >= Posicao && cr != this).OrderBy(cr => cr.Posicao).FirstOrDefault();
+
+            AtualizarVelocidade(carroEmFrente);
 
             // se não tem carro em frente ou o avanco é menor que a distancia entre os dois carros
             if (carroEmFrente == null || (Velocidade < (carroEmFrente.Posicao - carroEmFrente.Tamanho - Posicao)))
@@ -141,7 +144,7 @@ namespace FSA.TCC.Simulador
             }
         }
 
-        public void AtualizarVelocidade()
+        public void AtualizarVelocidade(Carro carroEmFrente = null)
         {
             if (tempoInicio == -1)
                 tempoInicio = TempoDoSistema.Valor;
@@ -150,6 +153,33 @@ namespace FSA.TCC.Simulador
 
             // se a velocidade calculada for maior que a velocidade limite, retorna a velocidade limite, caso contrário retorna a velocidade calculada
             _velocidade = VelocidadeLimite > novaVelocidade ? novaVelocidade : VelocidadeLimite;
+
+            //if (this.Caminho.RuaAtual.Semaforo == null || this.Caminho.RuaAtual.Semaforo.Estado == EstadoSemaforo.Fechado)
+            //{
+                float posicaoObstaculo = 0;
+
+                if (carroEmFrente != null)
+                {
+                    posicaoObstaculo = carroEmFrente.Posicao;
+                }
+                else
+                {
+                    posicaoObstaculo = Caminho.RuaAtual.Tamanho;
+                }
+
+                float segundosAteColisao = (posicaoObstaculo - Posicao) / Velocidade;
+
+                if (segundosAteColisao <= 1)
+                {
+                    _velocidade = (posicaoObstaculo - Posicao) + 1;
+                }
+                else
+                {
+                    // usando a equação de torricelli (v = v0 + at, invertendo ficou a = (v - v0) / t, mas como v deverá ser zero, então: a = v0 / t
+                    float aceleracaoParaParar = Velocidade / segundosAteColisao;
+                    _velocidade -= aceleracaoParaParar;
+                }
+            //}
         }
     }
 }
