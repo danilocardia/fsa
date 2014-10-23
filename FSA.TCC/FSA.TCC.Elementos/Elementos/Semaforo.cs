@@ -7,6 +7,7 @@ namespace FSA.TCC.Simulador
     public class Semaforo
     {
         private int contador;
+        private int ultimoInstanteDeAtualizacao = 0;
         private Dictionary<EstadoSemaforo, int> configuracao;
         public delegate void TrocaDeEstadoHandler();
 
@@ -23,8 +24,8 @@ namespace FSA.TCC.Simulador
         public Semaforo()
         {
             configuracao = new Dictionary<EstadoSemaforo, int>();
-            configuracao[EstadoSemaforo.Aberto] = 5;
-            configuracao[EstadoSemaforo.Fechado] = 30;
+            configuracao[EstadoSemaforo.Aberto] = 2;
+            configuracao[EstadoSemaforo.Fechado] = 58;
 
             Estado = EstadoSemaforo.Fechado;
         }
@@ -46,6 +47,9 @@ namespace FSA.TCC.Simulador
 
         public void Avancar()
         {
+            if (TempoDoSistema.Valor == ultimoInstanteDeAtualizacao)
+                return;
+
             if (contador == configuracao[Estado])
             {
                 TrocaEstado();
@@ -55,6 +59,8 @@ namespace FSA.TCC.Simulador
             {
                 contador++;
             }
+
+            ultimoInstanteDeAtualizacao = TempoDoSistema.Valor;
         }
     }
 

@@ -23,14 +23,15 @@ namespace FSA.TCC.Simulador
 
         void Semaforo_TrocaDeEstado()
         {
-            
+
         }
 
-        public void Avancar()
+        public void Atuar()
         {
             foreach (Rua rua in Cruzamento.Ruas)
             {
-                rua.Semaforo.Avancar();
+                if (rua.Semaforo != null)
+                    rua.Semaforo.Avancar();
 
                 foreach (ISensor sensor in rua.Sensores)
                 {

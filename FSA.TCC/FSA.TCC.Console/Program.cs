@@ -9,10 +9,168 @@ namespace FSA.TCC
 {
     class Program
     {
+        const int tamanho_bloco = 200;
         static int carros = 0;
-        static int tempo = 0;
 
-        static void Main(string[] args)
+        static Mapa mapa;
+        static List<CarroInstante> entradasDeCarros = new List<CarroInstante>();
+
+        class CarroInstante
+        {
+            public Carro Carro { get; set; }
+            public int Instante { get; set; }
+
+            public CarroInstante(Carro c, int instante)
+            {
+                Carro = c;
+                Instante = instante;
+            }
+        }
+
+        static void PrepararMapa()
+        {
+            Rua rua_a = new Rua("A", 2 * tamanho_bloco);
+            Rua rua_b = new Rua("B", 3 * tamanho_bloco);
+            Rua rua_c = new Rua("C", 4 * tamanho_bloco);
+            Rua rua_d = new Rua("D", 4 * tamanho_bloco);
+            Rua rua_e = new Rua("E", 3 * tamanho_bloco);
+            Rua rua_f = new Rua("F", 3 * tamanho_bloco);
+            Rua rua_g = new Rua("G", 4 * tamanho_bloco);
+            Rua rua_h = new Rua("H", 2 * tamanho_bloco);
+            Rua rua_i = new Rua("I", 5 * tamanho_bloco);
+            Rua rua_j = new Rua("J", 1 * tamanho_bloco);
+            Rua rua_k = new Rua("K", 5 * tamanho_bloco);
+            Rua rua_l = new Rua("L", 5 * tamanho_bloco);
+
+            Cruzamento cruzamento_1 = new Cruzamento(rua_a, rua_d, rua_b, rua_c, true);
+            Cruzamento cruzamento_2 = new Cruzamento(rua_d, rua_f, rua_e, rua_g, true);
+            Cruzamento cruzamento_3 = new Cruzamento(rua_c, rua_l, rua_h, null, false);
+            Cruzamento cruzamento_4 = new Cruzamento(rua_h, rua_j, rua_i, null, false);
+            Cruzamento cruzamento_5 = new Cruzamento(rua_g, rua_k, rua_j, null, true);
+
+            Controlador controlador_1 = new Controlador(cruzamento_1);
+            Controlador controlador_2 = new Controlador(cruzamento_2);
+            Controlador controlador_5 = new Controlador(cruzamento_5);
+
+            Caminho caminho_a = new Caminho("A", rua_b, rua_d, rua_e);
+            Caminho caminho_b = new Caminho("B", rua_b, rua_c, rua_h, rua_i);
+            Caminho caminho_c = new Caminho("C", rua_a, rua_c, rua_h, rua_i);
+            Caminho caminho_d = new Caminho("D", rua_k, rua_g, rua_e);
+
+            mapa = new Mapa(cruzamento_1, cruzamento_2, cruzamento_3, cruzamento_4, cruzamento_5);
+
+            mapa.Controladores.Add(controlador_1);
+            mapa.Controladores.Add(controlador_2);
+            mapa.Controladores.Add(controlador_5);
+
+            mapa.Caminhos.Add(caminho_a);
+            mapa.Caminhos.Add(caminho_b);
+            mapa.Caminhos.Add(caminho_c);
+            mapa.Caminhos.Add(caminho_d);
+        }
+
+        static void PrepararCarros()
+        {
+            foreach (Caminho caminho in mapa.Caminhos)
+            {
+                for (int i = 0; i < (caminho.Count * 10); i++)
+                {
+                    Carro carro = new Carro(Guid.NewGuid().ToString(), caminho, 2.3f, 80);
+
+                    Random gen = new Random();
+                    entradasDeCarros.Add(new CarroInstante(carro, gen.Next(i, i * 60)));
+                }
+            }
+        }
+
+        static void IniciarCarros()
+        {
+            List<Carro> carrosParaIniciar = entradasDeCarros
+                                                .Where(ci => ci.Instante == TempoDoSistema.Valor)
+                                                .Select(ci => ci.Carro)
+                                                .ToList();
+
+            foreach (Carro c in carrosParaIniciar)
+            {
+                c.Iniciar();
+            }
+        }
+
+        static void MovimentarCarros()
+        {
+            List<Carro> carrosParaMovimentar = entradasDeCarros
+                                                .Where(ci => ci.Instante < TempoDoSistema.Valor && ci.Carro.Status != StatusCarroEnum.CaminhoConcluido)
+                                                .Select(ci => ci.Carro)
+                                                .ToList();
+
+            foreach (Carro c in carrosParaMovimentar)
+            {
+                c.Mover();
+            }
+        }
+
+        static void AtuarControladores()
+        {
+            foreach (Controlador controlador in mapa.Controladores)
+            {
+                controlador.Atuar();
+            }
+        }
+
+        public static void Main(string[] args)
+        {
+            PrepararMapa();
+            PrepararCarros();
+
+            while (entradasDeCarros.Count(ci => ci.Carro.Status != StatusCarroEnum.CaminhoConcluido) > 0)
+            {
+                IniciarCarros();
+                MovimentarCarros();
+
+                //ExibirLog();
+
+                AtuarControladores();
+                TempoDoSistema.Incrementar();
+            }
+
+            GerarResultados();
+        }
+
+        static void GerarResultados()
+        {
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Users\Danilo\Desktop\teste_tcc\result_sim.csv"))
+            {
+                file.WriteLine("caminho;carro;entrada;semaforo;saida");
+
+                foreach (Carro c in entradasDeCarros.Select(ci => ci.Carro))
+                {
+                    file.WriteLine("{0};{1};{2};{3};{4}", c.Caminho.Id, c.Id, c.Dados.instanteEntradaSistema, c.Dados.tempoSemaforo, c.Dados.instanteSaidaSistema);
+                }
+            }
+        }
+
+        static void ExibirLog()
+        {
+            int carrosAguardando = entradasDeCarros.Count(ci => ci.Carro.Status == StatusCarroEnum.AguardandoEntrada);
+            int carrosEmMovimento = entradasDeCarros.Count(ci => ci.Carro.Status == StatusCarroEnum.EmMovimento);
+            int carrosParadoSemaforo = entradasDeCarros.Count(ci => ci.Carro.Status == StatusCarroEnum.ParadoSemaforo);
+            int carrosConcluido = entradasDeCarros.Count(ci => ci.Carro.Status == StatusCarroEnum.CaminhoConcluido);
+            
+            Console.Clear();
+            
+            Console.WriteLine("Tempo do sistema: {0}", TempoDoSistema.Valor);
+            Console.WriteLine("Qtd. Carros Aguardando: {0}", carrosAguardando);
+            Console.WriteLine("Qtd. Carros Movimento : {0}", carrosEmMovimento);
+            Console.WriteLine("Qtd. Carros Semaforo : {0}", carrosParadoSemaforo);
+            Console.WriteLine("Qtd. Carros Finalizado : {0}", carrosConcluido);
+
+            ExibeCarros(entradasDeCarros.Where(ci => ci.Carro.Status != StatusCarroEnum.AguardandoEntrada).Take(20).Select(ci => ci.Carro).ToArray());
+            ExibeSemaforos(mapa.Cruzamentos.ToArray());
+
+            Thread.Sleep(300);
+        }
+
+        static void MainOld(string[] args)
         {
             Rua r1 = new Rua("Rua 1", 10000);
             Rua r2 = new Rua("Rua 2", 10000);
@@ -51,7 +209,7 @@ namespace FSA.TCC
 
             while (carros > 0)
             {
-                ct1.Avancar();
+                ct1.Atuar();
 
                 if (TempoDoSistema.Valor == 20)
                 {
@@ -67,7 +225,7 @@ namespace FSA.TCC
                 //ExibeSensores(cz1);
 
                 TempoDoSistema.Incrementar();
-                Thread.Sleep(175);
+                Thread.Sleep(100);
             }
 
             //DesenhaMapa();
@@ -100,7 +258,7 @@ namespace FSA.TCC
 
             Console.WriteLine("TABELA DE PROGRESSO");
             Console.WriteLine("Carro\tRua\tProgresso\t\t\t\tVelocidade");
-            foreach (Carro c in lista_carros)
+            foreach (Carro c in lista_carros.Where(c => c.Caminho.RuaAtual != null).OrderBy(c => c.Caminho.RuaAtual.Id).ThenBy(c => c.Posicao))
             {
                 string carro, rua = "", progresso = "", velocidade = "";
 
@@ -111,8 +269,8 @@ namespace FSA.TCC
 
                     int pg = Convert.ToInt32((c.Posicao / c.Caminho.RuaAtual.Tamanho) * 30);
 
-                    for(int i = 0; i < pg; i++)
-                        progresso += "=" ;
+                    for (int i = 0; i < pg; i++)
+                        progresso += "=";
 
                     for (int i = 0; i < 30 - pg; i++)
                         progresso += "_";
@@ -120,25 +278,29 @@ namespace FSA.TCC
                     velocidade = c.Velocidade.ToString() + "m/s";
                 }
 
-                Console.WriteLine("{0}\t{1}\t[{2}]\t{3}", carro, rua, progresso, velocidade);
+                Console.WriteLine("{0}\t{1}\t[{2}]\t{3}", carro.Substring(0, 6), rua, progresso, velocidade);
             }
 
             Console.WriteLine("\n");
         }
 
-        static void ExibeSemaforos(Cruzamento cz)
+        static void ExibeSemaforos(params Cruzamento[] cz)
         {
             Console.WriteLine("ESTADO DOS SEMAFOROS");
             Console.WriteLine("Rua\t\tEstado\t\tCountdown");
 
-            foreach (Rua r in cz.Ruas)
+            for (int i = 0; i < cz.Length; i++)
             {
-                string carros = "";
+                foreach (Rua r in cz[i].Ruas.Where(r => r.Semaforo != null))
+                {
+                    string carros = "";
 
-                foreach(Carro c in r.CarrosNaRua)
-                    carros += c.Id + " ";
+                    foreach (Carro c in r.CarrosNaRua)
+                        carros += c.Id + " ";
 
-                Console.WriteLine("{0}\t\t{1}\t\t{2}\t\t{3}", r.Id, r.Semaforo.Estado.ToString(),r.Semaforo.TempoRestante.ToString().PadLeft(2, '0'), "(" + carros + ")");
+                    //Console.WriteLine("{0}\t\t{1}\t\t{2}\t\t{3}", r.Id, r.Semaforo.Estado.ToString(), r.Semaforo.TempoRestante.ToString().PadLeft(2, '0'), "(" + carros + ")");
+                    Console.WriteLine("{0}\t\t{1}\t\t{2}\t\t{3}", r.Id, r.Semaforo.Estado.ToString(), r.Semaforo.TempoRestante.ToString().PadLeft(2, '0'), "");
+                }
             }
 
             Console.WriteLine("\n");

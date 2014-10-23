@@ -18,6 +18,8 @@ namespace FSA.TCC.Simulador
         public event CarroInicioHandler InicioCaminho;
         public event CarroImpedidoHandler ImpedimentoDeProgresso;
 
+        public DadosCarro Dados { get; set; }
+
         public string Id { get; set; }
         public Caminho Caminho { get; set; }
         public float Posicao { get; set; }
@@ -28,8 +30,8 @@ namespace FSA.TCC.Simulador
             {
                 return _velocidade;
             }
-        } // m/s
-        public float VelocidadeLimite { get; set; } // m/s
+        } // km/h
+        public float VelocidadeLimite { get; set; } // km/h
         public float Aceleracao { get; set; }
         public float Tamanho
         {
@@ -37,15 +39,17 @@ namespace FSA.TCC.Simulador
         }
 
         private int tempoInicio = -1;
-        private bool isIniciado = false;
+        public bool isIniciado = false;
+        public StatusCarroEnum Status = StatusCarroEnum.AguardandoEntrada;
 
         public Carro(string id, Caminho c, float aceleracao, float velocidadeLimite)
         {
             Id = id;
-            Caminho = c;
+            Caminho = new Caminho(c);
             Posicao = 0;
-            Aceleracao = aceleracao;
+            Aceleracao = aceleracao / 3.6f;
             VelocidadeLimite = velocidadeLimite;
+            Dados = new DadosCarro();
         }
 
         public void Iniciar()
@@ -58,6 +62,8 @@ namespace FSA.TCC.Simulador
             {
                 InicioCaminho(this);
             }
+
+            Dados.instanteEntradaSistema = TempoDoSistema.Valor;
         }
 
         public void Mover()
@@ -88,6 +94,9 @@ namespace FSA.TCC.Simulador
                             TrocaDeRua(this, anterior, Caminho.RuaAtual);
                         }
                         Posicao = 0;
+
+                        this.Status = StatusCarroEnum.EmMovimento;
+                        this.Dados.instantesTrocaRua.Add(TempoDoSistema.Valor);
                     }
                     else
                     {
@@ -96,6 +105,9 @@ namespace FSA.TCC.Simulador
                         {
                             TerminoCaminho(this);
                         }
+
+                        this.Status = StatusCarroEnum.CaminhoConcluido;
+                        this.Dados.instanteSaidaSistema = TempoDoSistema.Valor;
                     }
                 }
                 else
@@ -107,6 +119,9 @@ namespace FSA.TCC.Simulador
                     {
                         AguardandoSemaforo(this);
                     }
+
+                    this.Status = StatusCarroEnum.ParadoSemaforo;
+                    this.Dados.tempoSemaforo += 1;
                 }
             }
         }
@@ -123,12 +138,15 @@ namespace FSA.TCC.Simulador
             {
                 // avança a posição do carro
                 Posicao += Velocidade;
+
+                this.Status = StatusCarroEnum.EmMovimento;
+                this.Dados.tempoMovimento += 1;
             }
             // senão, o avanco é maior que a distancia entre o carro e o carro em frente
             else
             {
-                // o carro fica meio metro atrás do carro da frente
-                float novaPosicao = carroEmFrente.Posicao - carroEmFrente.Tamanho - 0.5f;
+                // o carro fica um metro atrás do carro da frente
+                float novaPosicao = carroEmFrente.Posicao - carroEmFrente.Tamanho - 1f;
 
                 // atualiza a velocidade para a realmente utilizada
                 _velocidade = novaPosicao - Posicao;
@@ -140,6 +158,18 @@ namespace FSA.TCC.Simulador
                 if (ImpedimentoDeProgresso != null)
                 {
                     ImpedimentoDeProgresso(this, carroEmFrente);
+                }
+
+                if (carroEmFrente.Status == StatusCarroEnum.ParadoSemaforo)
+                {
+                    this.Status = StatusCarroEnum.ParadoSemaforo;
+                    this.Dados.tempoSemaforo += 1;
+                    _velocidade = 0;
+                }
+                else
+                {
+                    this.Status = StatusCarroEnum.EmMovimento;
+                    this.Dados.tempoMovimento += 1;
                 }
             }
         }
@@ -181,5 +211,21 @@ namespace FSA.TCC.Simulador
                 }
             //}
         }
+    }
+
+    public enum StatusCarroEnum {
+        AguardandoEntrada,
+        ParadoSemaforo,
+        EmMovimento,
+        CaminhoConcluido
+    }
+
+    public class DadosCarro
+    {
+        public int instanteEntradaSistema = 0;
+        public int tempoMovimento = 0;
+        public int tempoSemaforo = 0;
+        public List<int> instantesTrocaRua = new List<int>();
+        public int instanteSaidaSistema = 0;
     }
 }
