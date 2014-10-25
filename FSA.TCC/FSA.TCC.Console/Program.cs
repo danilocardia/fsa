@@ -127,7 +127,7 @@ namespace FSA.TCC
                 IniciarCarros();
                 MovimentarCarros();
 
-                //ExibirLog();
+                ExibirLog();
 
                 AtuarControladores();
                 TempoDoSistema.Incrementar();
@@ -167,7 +167,7 @@ namespace FSA.TCC
             ExibeCarros(entradasDeCarros.Where(ci => ci.Carro.Status != StatusCarroEnum.AguardandoEntrada).Take(20).Select(ci => ci.Carro).ToArray());
             ExibeSemaforos(mapa.Cruzamentos.ToArray());
 
-            Thread.Sleep(300);
+            Thread.Sleep(25);
         }
 
         static void MainOld(string[] args)

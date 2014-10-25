@@ -12,10 +12,18 @@ namespace FSA.TCC.Simulador
         {
             Cruzamento = cruzamento;
 
+            EstadoSemaforo es = EstadoSemaforo.Fechado;
             foreach (Rua rua in cruzamento.Ruas)
             {
                 if (rua.Semaforo != null)
                 {
+                    rua.Semaforo.Estado = es;
+
+                    if (es == EstadoSemaforo.Aberto)
+                        es = EstadoSemaforo.Fechado;
+                    else
+                        es = EstadoSemaforo.Aberto;
+
                     rua.Semaforo.TrocaDeEstado += Semaforo_TrocaDeEstado;
                 }
             }

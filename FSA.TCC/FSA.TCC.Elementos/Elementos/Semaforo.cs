@@ -24,8 +24,8 @@ namespace FSA.TCC.Simulador
         public Semaforo()
         {
             configuracao = new Dictionary<EstadoSemaforo, int>();
-            configuracao[EstadoSemaforo.Aberto] = 2;
-            configuracao[EstadoSemaforo.Fechado] = 58;
+            configuracao[EstadoSemaforo.Aberto] = 40;
+            configuracao[EstadoSemaforo.Fechado] = 40;
 
             Estado = EstadoSemaforo.Fechado;
         }
